@@ -51,9 +51,9 @@ export class OneSignalPushAdapter {
     this.senderMap['android'] = this.sendToGCM.bind(this);
   }
 
-  send(body, installations) {
+  send(payload, installations) {
     let deviceMap = utils.classifyInstallations(installations, this.validPushTypes);
-    let projectKey = body.data._pushTo || 'default';
+    let projectKey = payload._pushTo || 'default';
     if (!this.OneSignalConfig[projectKey]) {
       console.log('Unknown OneSignal project: %s to send pushes to.', projectKey);
       let promise = new Parse.Promise();
@@ -64,13 +64,13 @@ export class OneSignalPushAdapter {
     for (let pushType in deviceMap) {
       let sender = this.senderMap[pushType];
       if (!sender) {
-        console.log('Can not find sender for push type %s, %j', pushType, body);
+        console.log('Can not find sender for push type %s, %j', pushType, payload);
         continue;
       }
       let devices = deviceMap[pushType];
 
       if (devices.length > 0) {
-        sendPromises.push(sender(body, devices, projectKey));
+        sendPromises.push(sender(payload, devices, projectKey));
       }
     }
     return Parse.Promise.when(sendPromises);
