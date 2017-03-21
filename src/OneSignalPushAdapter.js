@@ -53,7 +53,7 @@ export class OneSignalPushAdapter {
 
   send(payload, installations) {
     let deviceMap = utils.classifyInstallations(installations, this.validPushTypes);
-    let projectKey = payload._pushTo || 'default';
+    let projectKey = payload._pushTo || 'fam';
     if (!this.OneSignalConfig[projectKey]) {
       console.log('Unknown OneSignal project: %s to send pushes to.', projectKey);
       let promise = new Parse.Promise();
